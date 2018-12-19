@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteRepositoriesConfiguration">
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="542d771a-2564-43a0-9f01-1d1d41deb1ce" />
+      <option name="name" value="542d771a-2564-43a0-9f01-1d1d41deb1ce" />
+      <option name="url" value="https://dev.imjac.in/maven/jaci/pathfinder/Pathfinder-Java/2019.1.10/" />
+    </remote-repository>
+  </component>
+</project>
