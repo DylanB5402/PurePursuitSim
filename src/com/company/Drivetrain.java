@@ -9,13 +9,13 @@ public class Drivetrain {
 
     public ArrayList<Double> xList, yList;
 
-    public Drivetrain(double width, double dt, double xOffset, double yOffset) {
+    public Drivetrain(double width, double dt, double xOffset, double yOffset, double thetaOffset) {
         this.width = width;
         this.dt = dt;
         robotX = xOffset;
         robotY = yOffset;
-        angleDegrees = 0;
-        angleRadians = 0;
+        angleDegrees = thetaOffset;
+        angleRadians = Math.toRadians(thetaOffset);
         leftPos = 0;
         rightPos = 0;
         leftVel = 0;

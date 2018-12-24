@@ -57,7 +57,7 @@ public class TrajectoryFollower {
     }
 
     public boolean isFinished() {
-        return m_trajectory.length()-3 == m_robotIndex;
+        return m_trajectory.length()-3 < m_robotIndex;
     }
 
     public double getLeftVelocity() {

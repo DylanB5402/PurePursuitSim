@@ -25,7 +25,7 @@ public class TrajectoryFollower2 {
         m_trajectory = traj;
         m_lookahead = lookahead;
         m_goingForwards = goingForwards;
-        m_robotIndex = 0;
+        m_robotIndex = 1;
         m_kP = kP;
         m_kD = kD;
         m_dT = dT;
@@ -46,14 +46,18 @@ public class TrajectoryFollower2 {
         m_lookaheadSegment = m_trajectory.get(m_lookaheadIndex);
         m_targetAngle = Math.toDegrees(m_lookaheadSegment.config.heading);
         m_velocity = m_robotSegment.kinematics.velocity;
+        if (m_velocity == 0) {
+            m_velocity = m_lookaheadSegment.kinematics.velocity;
+        }
         if (!m_goingForwards) {
             m_velocity = -m_velocity;
-//            robotTheta += 180;
+            robotTheta += 180;
         }
         m_error = Pathfinder.boundHalfDegrees(m_targetAngle - robotTheta);
         m_turn = m_error * m_kP + (m_error - m_lastError)/m_dT * m_kD;
         m_leftDesiredVel = m_velocity - m_turn;
         m_rightDesiredVel = m_velocity + m_turn;
+        m_lastError = m_error;
     }
 
     public boolean isFinished() {

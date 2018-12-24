@@ -54,39 +54,35 @@ public class Main {
 ////        // Show it
 ////        new SwingWrapper(chart).displayChart();
 
-        DcMotor motor = new DcMotor(12.0, (5330 * 2.0 * Math.PI / 60.0 / 12.75), 2 * 2.7, 2 * 131.0, 2 * 2.41 * 12.75);
-//        0.0762 meters, 0.5 meters, 25 kg
-        CoupledChassis chassis = new CoupledChassis(motor, motor, 0.0762, 0.5, 25.0);
 
-        CoupledCausalTrajGen  gen = new CoupledCausalTrajGen(chassis);
-        TrapezoidalProfile profile = new TrapezoidalProfile();
-        profile.applyLimit(Profile.VELOCITY, -2, 2);
-        profile.applyLimit(Profile.ACCELERATION, -1, 1);
 
         ArrayList<HermiteQuintic.Waypoint> waypoints = new ArrayList<>();
         waypoints.add(new HermiteQuintic.Waypoint(Vec2.cartesian(0, 0), Vec2.polar(5, Math.toRadians(0)), Vec2.cartesian(0, 0)));
-        waypoints.add(new HermiteQuintic.Waypoint(Vec2.cartesian(4, 1), Vec2.polar(5, Math.toRadians(0)), Vec2.cartesian(0, 0)));
+        waypoints.add(new HermiteQuintic.Waypoint(Vec2.cartesian(4, 4), Vec2.polar(5, Math.toRadians(0)), Vec2.cartesian(0, 0)));
 
-        ArrayList<Double> xList = new ArrayList<>();
-        ArrayList<Double> yList = new ArrayList<>();
-
+        DcMotor motor = new DcMotor(12.0, (5330 * 2.0 * Math.PI / 60.0 / 12.75), 2 * 2.7, 2 * 131.0, 2 * 2.41 * 12.75);
+//        0.0762 meters, 0.5 meters, 25 kg
+        CoupledChassis chassis = new CoupledChassis(motor, motor, 0.0762, 0.5, 25.0);
         TrajectoryFactory factory = new TrajectoryFactory(chassis, 0.02);
-        ArrayList<CoupledState> traj = factory.generateTrajectory(waypoints, 2, 1);
+        ArrayList<CoupledState> traj = factory.generateTrajectory(waypoints, 5, 5);
+        Drivetrain diplo = new Drivetrain(1, 0.02, 0, 0, 0);
+        TrajectoryFollower2 follower = new TrajectoryFollower2(traj, 5, true, 0.25, 0, 0.02);
 
-        for (CoupledState pos : traj) {
-//            xList.add(pos.config.position.x());
-//            yList.add(pos.config.position.y());
-            xList.add(pos.time);
-            yList.add(pos.kinematics.velocity);
-//            System.out.println(pos.kinematics.velocity);
+
+        while (!follower.isFinished()) {
+//        while (diplo.time < 20) {
+            follower.calculate(diplo.robotX, diplo.robotY, diplo.angleDegrees);
+            System.out.println(follower.getLeftVelocity());
+            System.out.println(follower.getRightVelocity());
+            diplo.update(follower.getLeftVelocity(), follower.getRightVelocity());
         }
+        double[] xData = Stream.of(diplo.xList.toArray(new Double[diplo.xList.size()])).mapToDouble(Double::doubleValue).toArray();
 
-        double[] xData = Stream.of(xList.toArray(new Double[xList.size()])).mapToDouble(Double::doubleValue).toArray();
-
-        double[] yData = Stream.of(yList.toArray(new Double[yList.size()])).mapToDouble(Double::doubleValue).toArray();
-        // Create Chart
+        double[] yData = Stream.of(diplo.yList.toArray(new Double[diplo.yList.size()])).mapToDouble(Double::doubleValue).toArray();
         XYChart chart = QuickChart.getChart("Pure pursuit", "X", "Y", "y(x)", xData, yData);
         // Show it
+
         new SwingWrapper(chart).displayChart();
+
     }
 }
